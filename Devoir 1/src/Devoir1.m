@@ -59,12 +59,12 @@ function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
   # Centre Reservoir
   cmR = CalcCMDeuxObjets(cm1R, cm23R, m1R, m2R);
   
-  # Centre de masse tatal
+  # Centre de masse tatal du systeme navette - lansuer en reper local
   cmNR = CalcCMDeuxObjets(cmN, cmR, mN, m1R+m2R);
   cmP = CalcCMDeuxObjets(cmPG, cmPD, mP, mP);
-  cm = CalcCMDeuxObjets(cmNR, cmP, mN+m1R+m2R, 2*mP);
+  cmNL = CalcCMDeuxObjets(cmNR, cmP, mN+m1R+m2R, 2*mP);
   
-  pcmNL=cmN;
+  pcmNL=cmNL+posNL;
   
   
   # Moment d'inertie
@@ -73,24 +73,45 @@ function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
   volCyl = VolCylindre(h1N, r1N);
   volCon = VolConeCirculaire(h2N, r2N);
   mVol = mN/(volCyl+volCon);
-  # Navette partie 1 (cylindre)
   mCyl=mVol*volCyl;
   mCon=mVol*volCon;
-  Icyl=[(mCyl/4)*(r1N^2) + (mCyl/12)*(h1N^2), 0, 0;
-        0, (mCyl/4)*(r1N^2) + (mCyl/12)*(h1N^2), 0;
-        0, 0, (mCyl/2)*(r1N^2)];
-        
-  IcylN = Icyl + mCyl*InertiaMatrix(cmN-cm1N);
-        
-  # Navette partie 2 (cone circulaire)
-  Icon=mCon*[(12*(r2N^2) + 3*(h2N^2))/80, 0, 0;
-        0, (12*(r2N^2) + 3*(h2N^2))/80, 0;
-        0, 0, 3*(r2N^2)/10];
-   
-  IconN = Icon + mCon*InertiaMatrix(cmN-cm2N);
+  # Navette partie 1 (cylindre) par rappot cmNL  
+  IcylN = MomentInertieCylindre(h1N, r1N, mCyl) + mCyl*InertiaMatrix(cmNL-cm1N);    
+  # Navette partie 2 (cone circulaire) par rappot cmNL 
+  IconN = MomentInertieConeCirculaire(h2N, r2N, mCon) + mCon*InertiaMatrix(cmNL-cm2N);
+  
+  # Propulseurs 
+  volCyl = VolCylindre(h1P, r1P);
+  volCon = VolConeCirculaire(h2P, r2P);
+  mVol = mP/(volCyl+volCon);
+  mCyl=mVol*volCyl;
+  mCon=mVol*volCon;
+  # Propulseur gauche partie 1 (cylindre) par rappot cmNL  
+  IcylPG = MomentInertieCylindre(h1N, r1N, mCyl) + mCyl*InertiaMatrix(cmNL-cm1PG);    
+  # Propulseur gauche partie 2 (cone circulaire) par rappot cmNL 
+  IconPG = MomentInertieConeCirculaire(h2N, r2N, mCon) + mCon*InertiaMatrix(cmNL-cm2PG);
+  # Propulseur droit partie 1 (cylindre) par rappot cmNL  
+  IcylPD = MomentInertieCylindre(h1N, r1N, mCyl) + mCyl*InertiaMatrix(cmNL-cm1PD);    
+  # Propulseur droit partie 2 (cone circulaire) par rappot cmNL 
+  IconPD = MomentInertieConeCirculaire(h2N, r2N, mCon) + mCon*InertiaMatrix(cmNL-cm2PD);
+  
+  # Reservoir 
+  volCyl = VolCylindre(h1R-(2*hR)/3, r1R);
+  volCon = VolConeCirculaire(h2R, r2R);
+  mVol = m2R/(volCyl+volCon);
+  mCyl=mVol*volCyl;
+  mCon=mVol*volCon;
+  # Reservoir partie 2 (cylindre oxygene) par rappot cmNL  
+  Icyl2R = MomentInertieCylindre(h1R-(2*hR)/3, r1R, mCyl) + mCyl*InertiaMatrix(cmNL-cm2R);    
+  # Reservoir partie 3 (cone circulaire) par rappot cmNL 
+  Icon3R = MomentInertieConeCirculaire(h2R, r2R, mCon) + mCon*InertiaMatrix(cmNL-cm3R);
+  # Reservoir partie 1 (cylindre hydrogene) par rappot cmNL 
+  Icyl1R = MomentInertieConeCirculaire(h2N, r2N, m1R) + mCon*InertiaMatrix(cmNL-cm1R);
+  
+  
   
   # Moment d'inertie navette relative a son cnetre de masse
-  INL = IcylN+IconN;
+  INL = IcylN+IconN+IcylPG+IconPG+IcylPD+IconPD+Icyl1R+Icyl2R+Icon3R;
   
   
   
@@ -101,12 +122,14 @@ function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
   alphaNL=3;
 endfunction
 
+
 function cm = CalcCMCylindreVerticalHomogene (baseX, baseY, baseZ, hauteur)
   cmX=baseX;
   cmY=baseY;
   cmZ=baseZ+hauteur/2;
   cm=[cmX, cmY, cmZ];
 endfunction
+
 
 function cm = CalcCMConeCirculaireVerticalHomogene (baseX, baseY, baseZ, hauteur)
   cmX=baseX;
@@ -115,17 +138,35 @@ function cm = CalcCMConeCirculaireVerticalHomogene (baseX, baseY, baseZ, hauteur
   cm=[cmX, cmY, cmZ];
 endfunction
 
+
+function I = MomentInertieConeCirculaire (h, r, m)
+    I=m*[(12*(r^2) + 3*(h^2))/80, 0, 0;
+        0, (12*(r^2) + 3*(h^2))/80, 0;
+        0, 0, 3*(r^2)/10];
+endfunction
+
+
+function I = MomentInertieCylindre (h, r, m)
+  I=[(m/4)*(r^2) + (m/12)*(h^2), 0, 0;
+        0, (m/4)*(r^2) + (m/12)*(h^2), 0;
+        0, 0, (m/2)*(r^2)];
+endfunction
+
+
 function cm = CalcCMDeuxObjets (cm1, cm2, m1, m2)
   cm = (cm1*m1+cm2*m2)/(m1+m2);
 endfunction
+
 
 function v = VolCylindre (h, r)
   v = (r^2)*pi*h;
 endfunction
 
+
 function v = VolConeCirculaire (h, r)
   v = (pi/3)*(r^2)*h;
 endfunction
+
 
 function I = InertiaMatrix (d)
   I=[d(2)^2+d(3)^2, -d(1)*d(2), -d(1)*d(3);
