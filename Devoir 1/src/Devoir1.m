@@ -1,24 +1,26 @@
 function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
+  
   # Constantes
   r1N=3.5;
   h1N=27.93;
   h2N=9.31;
   r2N=r1N;
-  mN=109;
+  mN=109000;
   
   r1P=1.855;
   h1P=39.9;
   h2P=5.6;
   r2P=r1P;
-  mP=469;
+  mP=469000;
   
   hR=46.9;
   r1R=4.2;
   h1R=39.1;
   h2R=7.8;
   r2R=r1R;
-  m1R=108;
-  m2R=631;
+  m1R=108000;
+  m2R=631000;
+  
   
   
   # Calcul de centre de masse
@@ -67,6 +69,7 @@ function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
   pcmNL=cmNL+posNL;
   
   
+  
   # Moment d'inertie
   
   # Navette 
@@ -108,18 +111,31 @@ function [pcmNL, INL, alphaNL ] = Devoir1 (AngRot, vangulaire, forces, posNL)
   # Reservoir partie 1 (cylindre hydrogene) par rappot cmNL 
   Icyl1R = MomentInertieConeCirculaire(h2N, r2N, m1R) + mCon*InertiaMatrix(cmNL-cm1R);
   
+  # Moment d'inertie navette relative a son centre de masse
+  I = IcylN+IconN+IcylPG+IconPG+IcylPD+IconPD+Icyl1R+Icyl2R+Icon3R;
+  
+  # Moment d'inertie apres la rotation
+  Rx = [1, 0, 0; 0, cos(AngRot), -sin(AngRot); 0, sin(AngRot), cos(AngRot)];
+  INL = Rx * I * (Rx');
   
   
-  # Moment d'inertie navette relative a son cnetre de masse
-  INL = IcylN+IconN+IcylPG+IconPG+IcylPD+IconPD+Icyl1R+Icyl2R+Icon3R;
   
+  # Acceleration angulaire
   
+  # Moment cinetique
+  L = INL * (vangulaire');
   
+  # Point d'application des forces
+  # Propulseurs
+  rForceP = CalcCMDeuxObjets([-(r1R+r1P), r1N+r1R, 0], [r1R+r1P, r1N+r1R, 0], forces(2), forces(3));
+  rForceTotal = CalcCMDeuxObjets(rForceP, [0, 0, 0], forces(2) + forces(3), forces(1));
+  forceScalaire = forces(2) + forces(3) + forces(1);
+  # Moment de force
+  momDeForce = cross((rForceTotal - posNL), [0, cos(AngRot) * forceScalaire, sin(AngRot) * forceScalaire]);
   
+  # acceleratio angle
+  alphaNL = inv(INL) * ((momDeForce') + cross(L, (vangulaire')));
   
-
-  
-  alphaNL=3;
 endfunction
 
 
@@ -171,5 +187,5 @@ endfunction
 function I = InertiaMatrix (d)
   I=[d(2)^2+d(3)^2, -d(1)*d(2), -d(1)*d(3);
      -d(2)*d(1), d(1)^2+d(3)^2, -d(2)*d(3);
-     -d(3)*d(1), -d(3)*d(2), d(1)^2+d(2)^2]
+     -d(3)*d(1), -d(3)*d(2), d(1)^2+d(2)^2];
 endfunction
