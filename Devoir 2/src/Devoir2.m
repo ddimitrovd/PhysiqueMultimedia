@@ -1,66 +1,42 @@
 function [coup tf vbf x y z] = Devoir2(option, rbi, vbi, wbi)
   
   accGrav = [0, 0, -9.8]';
-  dt = 0.0002;
+  dt = 0.002;
   T = 0;
   vit = vbi;
   pos = rbi;
   m = 0.0027;
   r = 0.0199;
   
-  % Option 1 force grav seulement (force en Z)
-  if (option == 1)
-    vitInitZ = vbi(3);
-    acc = accGrav;
+
+  x=[pos(1)];
+  y=[pos(2)];
+  z=[pos(3)];
+  t=[T];
     
-    x=[];
-    y=[];
-    z=[];
-    t=[];
-    
-    while (VerifierConditions(pos) == -1) 
-       pos = CalcPos(acc, vbi, rbi, T);
-       t = [t T];
-       x = [x pos(1)];
-       y = [y pos(2)];
-       z = [z pos(3)];
-       T = T+dt;
-    end
-    
-    % Retourner les resultats
-    tf = T;
-    vbf = CalcVit(acc,vbi,tf);
-    coup = 1; %*********************************************************
-     
-  % Options 2 et 3 
-  else
-    x=[pos(1)];
-    y=[pos(2)];
-    z=[pos(3)];
-    t=[T];
-    
-    while (VerifierConditions(pos) == -1)    
-      % Nouvelle iteration dependement de forces en jeu
-      if (option == 2)
-        vit = RungeKutta (vit, wbi, dt, m, r, @Acc2);
-      else
-        vit = RungeKutta (vit, wbi, dt, m, r, @Acc3);
-      endif
+  while (VerifierConditions(pos) == -1)    
+    % Nouvelle iteration dependement de forces en jeu
+    if (option == 1)
+      vit = RungeKutta (vit, wbi, dt, m, r, @Acc1);
+    elseif (option == 2)
+      vit = RungeKutta (vit, wbi, dt, m, r, @Acc2);
+    else
+      vit = RungeKutta (vit, wbi, dt, m, r, @Acc3);
+    endif
       
-      % Mettre a jour la position     
-      pos = pos + vit*dt;
+    % Mettre a jour la position     
+    pos = pos + vit*dt;
       
-      T = T+dt;
-      t=[t T];
-      x=[x pos(1)];
-      y=[y pos(2)];
-      z=[z pos(3)];
-    end
+    T = T+dt;
+    t=[t T];
+    x=[x pos(1)];
+    y=[y pos(2)];
+    z=[z pos(3)];
+  end
     
-    tf = T;
-    vbf = vit
-    coup = 1; %*********************************************************
-  endif
+  tf = T;
+  vbf = vit;
+  coup = VerifierConditions(pos)
 endfunction
 
 
@@ -116,24 +92,4 @@ function [ Fm ] = Magnus(v,w,r)
     wCv = cross(w,v);
     wCv = wCv/norm(wCv);
     Fm = p*Cm*A*(norm(v)^2)/2*wCv;  
-endfunction
-
-
-
-
-
-
-
-
-
-
-% Position en option Gravitationel
-function p = CalcPos(a, v0, p0, t)
-  p = p0 + v0*t + a/2*t^2;
-endfunction
-
-
-% Vitesse en option Gravitationel
-function v = CalcVit(a, v0, t)
-  v = v0+t*a;
 endfunction
