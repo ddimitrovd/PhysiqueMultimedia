@@ -1,4 +1,4 @@
-function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi)
+function [x y z] = Devoir2Plot(option, rbi, vbi, wbi)
   
   accGrav = [0, 0, -9.8]';
   dt = 0.002;
@@ -33,9 +33,4 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi)
     y=[y pos(2)];
     z=[z pos(3)];
   end
-   
-  rbf= [pos(1), pos(2), pos(3)];
-  tf = T;
-  vbf = vit;
-  coup = VerifierConditions(pos, rbi);
 endfunction
