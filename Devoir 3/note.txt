@@ -1,0 +1,5 @@
+To detect collisions:
+
+1. object a as foyr points, obj b as a plane: determine if any of the points are inside the plane 
+
+2. same but reverse objects a and b
