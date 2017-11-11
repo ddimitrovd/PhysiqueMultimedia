@@ -16,13 +16,14 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   lA = 1.82
   lB = 1.6
   
-  % positions angulaires par rapport a l'axe x
-  OmegaA = cross([1, 0], vitA);
-  OmegaB = cross([1, 0], vitB);
+  % positions angulaires par rapport a l'axe x.
+  % Position angulaire 0 est quand la voiture est oriente selon l"axe x
+  ThetaA = atan2d(norm(cross([1, 0, 0],[vitA(1), vitA(2), 0])),dot([1, 0, 0],[vitA(1), vitA(2), 0]));
+  ThetaB = atan2d(norm(cross([1, 0, 0],[vitB(1), vitB(2), 0])),dot([1, 0, 0],[vitB(1), vitB(2), 0]));
   
-  % moment d'inertie
-  IA = [(LA*(lA^3)) / 12, ((LA^3)*lA) / 12];
-  IB = [(LB*(lB^3)) / 12, ((LB^3)*lB) / 12];
+  % moment d'inertie polaire z
+  IA = [((LA*lA)/12)*((LA^2)+(lA^2))];
+  IB = [((LB*lB)/12)*((LB^2)+(lB^2))];
 
   xA=[posA(1)];
   yA=[posA(2)];
@@ -38,7 +39,7 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
     vitB = vitB + Friction(vitB) * dt;
     % Vitesse angulaire
     wA = wA + (MomenFriction(vitA, LA, lA, mA) / IA) * dt;
-    wB = wB + (MomenFriction(vitB, LB, lB mB) / IB) * dt;
+    wB = wB + (MomenFriction(vitB, LB, lB, mB) / IB) * dt;
     
       
     % Mettre a jour la position   
@@ -47,8 +48,8 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
     posA = posA + vitA * dt;
     posB = posB + vitB * dt;  
     % Position angulaire
-    OmegaA = OmegaA + wA * dt;
-    OmegaB = OmegaB + wB * dt;
+    ThetaA = ThetaA + wA * dt;
+    ThetaB = ThetaB + wB * dt;
     
     i = i + 1; % CONDITIONS here 
      

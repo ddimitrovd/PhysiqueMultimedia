@@ -6,7 +6,7 @@ function [tau] = MomenFriction (v,L,l,m)
   
   F = Friction(v) * m;
   F = F / norm(F);
-  fnc = (x - L/2) * F(2) - (y - l / 2) * F(1);
+  fnc = @(x,y) (x - L/2) * F(2) - (y - l / 2) * F(1);
   
   p = m * g / L * l;
   
