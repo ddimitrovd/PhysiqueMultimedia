@@ -28,10 +28,14 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   IA = [((LA*lA)/12)*((LA^2)+(lA^2))];
   IB = [((LB*lB)/12)*((LB^2)+(lB^2))];
 
+  % donnees pour le plot
   xA=[posA(1)];
   yA=[posA(2)];
   xB=[posB(1)];
   yB=[posB(2)];
+  
+  % memoriser la position initiale des polygones
+  [collision, point, n, AX1, AY1, BX1, BY1] = VerifierCollisioEtRetournerPolygones(posA, posB, ThetaA, ThetaB);
     
   while (VerifierCollisioEtRetournerPolygones(posA, posB, ThetaA, ThetaB)(1) == 0 && (norm(vitA) > 1 || norm(vitB) > 1))
     % Nouvelle iteration 
@@ -62,5 +66,13 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
     
   endwhile
   
-      Plot(xA, yA, xB, yB,'Plot');
+  % memoriser la position initiale des polygones
+  [collision, point, n, AX2, AY2, BX2, BY2] = VerifierCollisioEtRetournerPolygones(posA, posB, ThetaA, ThetaB);
+  
+  % si il a eu collision
+  if (collision == 1)
+  endif
+    
+  % Plot la graphique
+  Plot(xA, yA, xB, yB, AX1, AX2, AY1, AY2, BX1, BX2, BY1, BY2);
 endfunction
