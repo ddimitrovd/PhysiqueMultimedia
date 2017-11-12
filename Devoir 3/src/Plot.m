@@ -6,8 +6,7 @@ function Plot(xA, yA, xB, yB, titre)
     hold on  ;
     plot(xB, yB,'linewidth', 2, 'r');
     
-    title(titre); 
-    % legend('Table', 'Voiture A', 'Voitue B');
+    title(titre);
     xlim([-5 105]);
     ylim([-5 105]);
     xlabel('X');

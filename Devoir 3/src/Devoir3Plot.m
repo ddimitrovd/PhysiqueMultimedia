@@ -11,10 +11,10 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   posB = rbi;
   mA = 1540;
   mB = 1010;
-  LA = 4.78
-  LB = 4.23
-  lA = 1.82
-  lB = 1.6
+  LA = 4.78;
+  LB = 4.23;
+  lA = 1.82;
+  lB = 1.6;
   
   % positions angulaires par rapport a l'axe x.
   % Position angulaire 0 est quand la voiture est oriente selon l"axe x
@@ -33,15 +33,15 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   xB=[posB(1)];
   yB=[posB(2)];
     
-  while (VerifierConditions(posA, posB, ThetaA, ThetaB) == 0)
+  while (VerifierCollisioEtRetournerPolygones(posA, posB, ThetaA, ThetaB)(1) == 0 && (norm(vitA) > 1 || norm(vitB) > 1))
     % Nouvelle iteration 
 
     % Vitesse lineaire
     vitA = vitA + Friction(vitA) * dt;
     vitB = vitB + Friction(vitB) * dt;
     % Vitesse angulaire
-    wA = wA + (MomenFriction(vitA, LA, lA, mA) / IA) * dt;
-    wB = wB + (MomenFriction(vitB, LB, lB, mB) / IB) * dt;
+    wA = wA + (MomentFriction(vitA, LA, lA, mA) / IA) * dt;
+    wB = wB + (MomentFriction(vitB, LB, lB, mB) / IB) * dt;
     
       
     % Mettre a jour la position   
@@ -57,5 +57,10 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
     yA=[yA posA(2)];
     xB=[xB posB(1)];
     yB=[yB posB(2)];
+    
+
+    
   endwhile
+  
+      Plot(xA, yA, xB, yB,'Plot');
 endfunction
