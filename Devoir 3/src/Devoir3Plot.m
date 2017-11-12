@@ -18,8 +18,11 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   
   % positions angulaires par rapport a l'axe x.
   % Position angulaire 0 est quand la voiture est oriente selon l"axe x
-  ThetaA = atan2d(norm(cross([1, 0, 0],[vitA(1), vitA(2), 0])),dot([1, 0, 0],[vitA(1), vitA(2), 0]));
-  ThetaB = atan2d(norm(cross([1, 0, 0],[vitB(1), vitB(2), 0])),dot([1, 0, 0],[vitB(1), vitB(2), 0]));
+  vecX = [1, 0];
+  vecA = norm([vitA(1), vitA(2)]);
+  vecB = norm([vitB(1), vitB(2)]);
+  ThetaA = atan2(1, 0) - atan2(vitA(1), vitA(2));
+  ThetaB = atan2(1, 0) - atan2(vitB(1), vitB(2));
   
   % moment d'inertie polaire z
   IA = [((LA*lA)/12)*((LA^2)+(lA^2))];
@@ -30,8 +33,7 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   xB=[posB(1)];
   yB=[posB(2)];
     
-  i = 0; % CONDITIONS here 
-  while (i < 1000)    % CONDITIONS here 
+  while (VerifierConditions(posA, posB, ThetaA, ThetaB) == 0)
     % Nouvelle iteration 
 
     % Vitesse lineaire
@@ -50,8 +52,6 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
     % Position angulaire
     ThetaA = ThetaA + wA * dt;
     ThetaB = ThetaB + wB * dt;
-    
-    i = i + 1; % CONDITIONS here 
      
     xA=[xA posA(1)];
     yA=[yA posA(2)];
