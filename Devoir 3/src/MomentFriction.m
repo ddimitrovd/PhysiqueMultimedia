@@ -6,9 +6,9 @@ function [tau] = MomentFriction (v,L,l,m)
   
   F = Friction(v) * m;
   F = F / norm(F);
-  fnc = @(x,y) (x - L/2) * F(2) - (y - l / 2) * F(1);
+  fnc = @(x,y) (x - L/2) * F(2) - (y - l/2) * F(1);
   
   p = (m * g) / (L * l);
   
-  tau = dblquad(fnc, 0, L, 0, l) * Mu(v) * p;
+  tau = dblquad(fnc, 0, L, 0, l) * p * Mu(v);
 endfunction

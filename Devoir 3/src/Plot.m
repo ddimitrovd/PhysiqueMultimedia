@@ -15,8 +15,8 @@ function Plot(xA, yA, xB, yB, AX1, AX2, AY1, AY2, BX1, BX2, BY1, BY2)
     plot(xB, yB,'linewidth', 2, 'r');
     
     title("Figure");
-    xlim([-5 200]);
-    ylim([-5 200]);
+    xlim([-5 105]);
+    ylim([-5 105]);
     xlabel('X');
     ylabel('Y');
 end

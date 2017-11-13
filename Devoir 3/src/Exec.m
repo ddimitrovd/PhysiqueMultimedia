@@ -34,14 +34,14 @@ rbi6 = [100, 10];
 vbi6 = [10, 0, 5];
 tb6 = 1.0;
 
-[xA1 yA1 xB1 yB1] = Devoir3Plot(rai1, vai1, rbi1, vbi1, tb1);
+[coll1 tf1 raf1 vaf1 rbf1 vbf1] = Devoir3(rai1, vai1, rbi1, vbi1, tb1);
 
-[xA1 yA1 xB1 yB1] = Devoir3Plot(rai2, vai2, rbi2, vbi2, tb2);
+[coll2 tf2 raf2 vaf2 rbf2 vbf2] = Devoir3(rai2, vai2, rbi2, vbi2, tb2);
 
-[xA1 yA1 xB1 yB1] = Devoir3Plot(rai3, vai3, rbi3, vbi3, tb3);
+[coll3 tf3 raf3 vaf3 rbf3 vbf3] = Devoir3(rai3, vai3, rbi3, vbi3, tb3);
 
-[xA4 yA4 xB4 yB4] = Devoir3Plot(rai4, vai4, rbi4, vbi4, tb4);
+[coll4 tf4 raf4 vaf4 rbf4 vbf4] = Devoir3(rai4, vai4, rbi4, vbi4, tb4);
 
-[xA4 yA4 xB4 yB4] = Devoir3Plot(rai5, vai5, rbi5, vbi5, tb5);
+[coll5 tf5 raf5 vaf5 rbf5 vbf5] = Devoir3(rai5, vai5, rbi5, vbi5, tb5);
 
-[xA4 yA4 xB4 yB4] = Devoir3Plot(rai6, vai6, rbi6, vbi6, tb6);
+[coll6 tf6 raf6 vaf6 rbf6 vbf6] = Devoir3(rai6, vai6, rbi6, vbi6, tb6);
