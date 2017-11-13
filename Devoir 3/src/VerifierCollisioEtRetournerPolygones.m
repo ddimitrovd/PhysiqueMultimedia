@@ -23,6 +23,8 @@ function [reponse point normaleCollision AX AY BX BY] = VerifierCollisioEtRetour
   AA = rotateVector([LA/2, lA/2], ThetaA);
   AA = posA + AA;
   
+  A = [AA; AB; AC; AD];
+  
   BD = rotateVector([LB/2, -lB/2], ThetaB);
   BD = posB + BD;
   BC = rotateVector([-LB/2, -lB/2], ThetaB);
@@ -32,14 +34,18 @@ function [reponse point normaleCollision AX AY BX BY] = VerifierCollisioEtRetour
   BA = rotateVector([LB/2, lB/2], ThetaB);
   BA = posB + BA;
   
+  B = [BA; BB; BC; BD];
+  
   % plygones A et B
   AX = [AA(1), AB(1), AC(1), AD(1)];
   AY = [AA(2), AB(2), AC(2), AD(2)];
   BX = [BA(1), BB(1), BC(1), BD(1)];
   BY = [BA(2), BB(2), BC(2), BD(2)];
   
-  
   % Verifier si A est dans B 
+  
+  a = A(1,:);
+  
   if (IsInPolygon(AA, BX, BY) == 1)
     reponse = 1;
     point = AA;

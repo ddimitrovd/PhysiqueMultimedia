@@ -40,22 +40,29 @@ function [xA yA xB yB] = Devoir3Plot(rai, vai, rbi, vbi, tb)
   while (VerifierCollisioEtRetournerPolygones(posA, posB, ThetaA, ThetaB)(1) == 0 && (norm(vitA) > 1 || norm(vitB) > 1))
     % Nouvelle iteration 
 
-    % Vitesse lineaire
+    % A vitesses lineaire et angulaire 
     vitA = vitA + Friction(vitA) * dt;
-    vitB = vitB + Friction(vitB) * dt;
-    % Vitesse angulaire
     wA = wA + (MomentFriction(vitA, LA, lA, mA) / IA) * dt;
-    wB = wB + (MomentFriction(vitB, LB, lB, mB) / IB) * dt;
     
-      
-    % Mettre a jour la position   
-  
-    % Position lineaire  
+    % B vitesses lineaire et angulaire 
+    if (T > tb)
+      vitB = vitB + Friction(vitB) * dt;
+      wB = wB + (MomentFriction(vitB, LB, lB, mB) / IB) * dt;
+    endif
+    
+    % A positions lineaire et angulaire 
     posA = posA + vitA * dt;
-    posB = posB + vitB * dt;  
-    % Position angulaire
-    ThetaA = ThetaA + wA * dt;
     ThetaB = ThetaB + wB * dt;
+    
+    % B positions lineaire et angulaire 
+    posB = posB + vitB * dt;  
+    if (T > tb)
+      ThetaB = ThetaB + wB * dt;
+    endif
+    
+    % Informations suplementaires
+    
+    T = T + dt;
      
     xA=[xA posA(1)];
     yA=[yA posA(2)];
