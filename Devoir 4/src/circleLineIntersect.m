@@ -10,7 +10,7 @@ function [x y] = circleLineIntersect(circleX, circleY, r, lineX, lineY, lineVX, 
   
   pointToCenter = sqrt((circleX - lineX)^2 + (circleY - lineY)^2);
   if disc >= 0 
-    if pointToCenter > r + 0.5 % 0.5 is just for safety
+    if pointToCenter > r + 0.5 %0.5 is just for safety
       t = (-b - sqrt(disc)) / (2 * a);
     else 
       t = (-b + sqrt(disc)) / (2 * a);
