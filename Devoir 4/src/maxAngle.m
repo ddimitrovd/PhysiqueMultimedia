@@ -12,7 +12,7 @@ function [theta phi] = maxAngle(pos)
     bas(1) = bas(1) - d;
     bas(3) = bas(3) - h / 2;
     
-  elseif (pos(3) <= 29 || pos(3) >= -7)
+  elseif (pos(3) <= 29 && pos(3) >= -7)
     haut = posCyn - pos;
     haut(1) = haut(1) - d;
     haut(3) = haut(3) + h / 2;
