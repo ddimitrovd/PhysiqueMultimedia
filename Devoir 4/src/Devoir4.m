@@ -68,21 +68,16 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
 
     % intersection angle XYZ
     InV = [rayX, rayY, rayZ];
-    angIn = acos(real(dot(InV, normV)) / (norm(InV) * norm(normV)));
-    if normV(3) == 0
-      InVspecific = [rayX, rayY];
-      normVspecific = [normV(1), normV(2)];
-      angIn = acos(real(dot(InVspecific, normVspecific)) / (norm(InVspecific) * norm(normVspecific)));
-    else
-      InVspecific = [0, 0, rayV];
-      normVspecific = [normV(1), normV(2)];
-      angIn = acos(real(dot(InVspecific, normVspecific)) / (norm(InVspecific) * norm(normVspecific)));
+    angIn = (acos((dot(InV, normV)) / (norm(InV) * norm(normV))));
+    if angIn > pi/2
+      angIn = pi - angIn;
+    endif 
     
     % critical angle
     angCrit = asin(n2/n1);
     
     % =======================================refraction or relfection=====================================
-    if n1 > n2 && angIn > angCrit
+    if n1 > n2 && angIn > (2 * angCrit)/3 % total reflectio or more reflection/refraction with enough intensity reflected to continue simulation
       % reflection
       [polar azim posX posY posZ] = doReflect(polar, azim, x, y, z, InV, normV);
     else
