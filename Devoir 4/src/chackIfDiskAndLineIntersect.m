@@ -13,7 +13,7 @@ function [x y] = chackIfDiskAndLineIntersect(diskPosZ, r, lineX, lineY, lineZ, l
   y = zEq*lineVY+LineY;
   
   % check if part of disk
-  if (x+cX)^2+(y+cY)^2 <= r^2;
+  if (x-cX)^2+(y-cY)^2 <= r^2;
     return;
   else
     x = NaN;
