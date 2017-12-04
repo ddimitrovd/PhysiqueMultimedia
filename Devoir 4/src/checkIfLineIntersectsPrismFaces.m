@@ -4,7 +4,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
   xi = [0];
   yi = [0];
   zi = [0];
-  face = ['N'];
+  face = [0];
   
   % look for a intersect on magenta
   zEq= (17 - lineZ)/lineVZ;
@@ -14,7 +14,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi x];
     yi = [yi y];
     zi = [zi 17];
-    face = [face 'm'];
+    face = [face 6];
   endif
 
   % look for a intersect on blue
@@ -25,7 +25,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi x];
     yi = [yi y];
     zi = [zi 12];
-    face = [face 'b'];
+    face = [face 5];
   endif
 
   % look for a intersect on red
@@ -36,7 +36,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi 3];
     yi = [yi y];
     zi = [zi z];
-    face = [face 'r'];
+    face = [face 1];
   endif
 
   % look for a intersect on cayan
@@ -47,7 +47,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi 4];
     yi = [yi y];
     zi = [zi z];
-    face = [face 'c'];
+    face = [face 2];
   endif
 
   % look for a intersect on green
@@ -58,7 +58,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi x];
     yi = [yi 3];
     zi = [zi z];
-    face = [face 'g'];
+    face = [face 3];
   endif
 
   % look for a intersect on yellow
@@ -69,7 +69,7 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     xi = [xi x];
     yi = [yi 5];
     zi = [zi z];
-    face = [face 'y'];
+    face = [face 4];
   endif
 
   if columns(xi) > 1

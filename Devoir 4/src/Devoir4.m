@@ -3,7 +3,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
   xi = [0];
   yi = [0];
   zi = [0];
-  face = ['N'];
+  face = [0];
   
   cylSectionX = 4;
   cylSectionY = 4;
@@ -52,7 +52,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
         % ===================================Prism intersection check========================================
         if rayIsOut == 0
           [xa ya za f] = checkIfLineIntersectsPrismFaces(posX, posY, posZ, rayX, rayY, rayZ);
-          if (rayIsOut == 0 && f(1) != 'N')
+          if (rayIsOut == 0 && f(1) != 0)
             xi = [xi xf];
             yi = [yi yf];
             zi = [zi zf];

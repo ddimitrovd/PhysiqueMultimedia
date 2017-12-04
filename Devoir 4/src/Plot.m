@@ -5,7 +5,22 @@ function Plot(x, y, z, face, poso, t)
     figure('Name', "Figure") ;
     
     for i = 2:n
-      scatter3(x(i) ,y(i), z(i), face(i), "filled");
+      color='k';
+      switch (face(i))
+        case 1
+          color = 'r';
+        case 2
+          color = 'c';
+        case 3
+          color = 'g';
+        case 4
+          color = 'y';
+        case 5
+          color = 'b';
+        case 6
+          color = 'm';
+      endswitch      
+      scatter3(x(i) ,y(i), z(i), color, "filled");
       hold on;
     endfor
     
