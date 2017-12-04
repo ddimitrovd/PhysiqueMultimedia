@@ -18,14 +18,18 @@ function [rayIsOut n1 n2 polar azim posX posY posZ] = doRefract(rayIsOut, n1, n2
     angInxy = acos(real(dot(InVxy, normVxy)) / (norm(InVxy) * norm(normVxy)));
     
     angRefracAzim = asin((n1 * sin(angInxy)) / n2);
-    dir = cross([normVxy, 0], [InVxy, 0])(3);
+    dir = cross([normVxy, 0], [InVxy, 0])(3);  
     angRefracAzimFactor = (dir/abs(dir)) * (angRefracAzim - angInxy);
+    if dir == 0 
+      angRefracAzimFactor = 0;
+    endif
     azim = azim + angRefracAzimFactor;
     
-    angRefracPolar = asin((n1 * sin(polar)) / n2);
     if polar > pi/2
+      angRefracPolar = asin((n1 * sin(polar - pi/2)) / n2);
       polar = pi/2 + angRefracPolar;
     elseif polar < pi/2
+      angRefracPolar = asin((n1 * sin(pi/2 - polar)) / n2);
       polar = pi/2 - angRefracPolar;
     endif
   endif

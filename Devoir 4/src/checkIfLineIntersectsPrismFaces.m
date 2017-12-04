@@ -72,8 +72,8 @@ function [xi yi zi face] = checkIfLineIntersectsPrismFaces(lineX, lineY, lineZ, 
     face = [face 'y'];
   endif
 
-  % determine which intersect is closer
   if columns(xi) > 1
+    % determine which intersect is closer
     d1 = sqrt((xi(2) - lineX)^2 + (yi(2) - lineY)^2 + (zi(2) - lineZ)^2);
     d2 = sqrt((xi(3) - lineX)^2 + (yi(3) - lineY)^2 + (zi(3) - lineZ)^2);
     

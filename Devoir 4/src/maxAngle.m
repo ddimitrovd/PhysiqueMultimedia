@@ -1,7 +1,9 @@
-function [theta phi] = maxAngle(pos)
+function [thetaMax thetaMin phiMax phiMin] = maxAngle(pos)
   
   h = 18;
   Rb = 2;
+  
+  vecteurZ = [0, 0, 1];
   posCyn = [4, 4, 11];
   posCynXY = [4, 4];
   posXY = [0, 0];
@@ -43,8 +45,12 @@ function [theta phi] = maxAngle(pos)
     bas(3) = bas(3) + h / 2;
     
     endif
-    phi = acos(dot(haut, bas) / (norm(haut) * norm(bas)));
+    phiMax = acos(dot(vecteurZ, bas) / (norm(vecteurZ) * norm(bas)));
+    phiMin = acos(dot(vecteurZ, haut) / (norm(vecteurZ) * norm(haut)));
   
     theta = acos(dot(coin1, coin2) / (norm(coin1) * norm(coin2)));
+    thetaMax = theta / 2;
+    thetaMin = - theta / 2;
   endfunction
+
 

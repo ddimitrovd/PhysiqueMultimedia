@@ -17,7 +17,12 @@ function [polar azim posX posY posZ] = doReflect(polar, azim, x, y, z, InV, norm
       angInxy = pi - angInxy;
     endif 
     
-    azim = azim - (pi - angInxy*2);
+    dir = cross([normVxy, 0], [InVxy, 0])(3);  
+    if dir == 0 
+      dir = 1;
+    endif
+    
+    azim = azim - (pi - angInxy*2)*(dir/abs(dir));
   endif
   
   % set new values

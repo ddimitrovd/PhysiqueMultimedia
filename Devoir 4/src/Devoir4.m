@@ -10,24 +10,23 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
   cylR = 2;
   cylMax = 11 + 18/2;
   cylMin = 11 - 18/2;
- 
   
-  % ============================finding limit angles for minising calculations============================
-  polarMin = pi/8;
-  polarMax = pi/2 + pi/2 - pi/8;
-  azimMax = 0.55;
-  azimMin = -0.55;
+  [thetaMax thetaMin phiMax phiMin] = maxAngle(poso); % This function does not function correctly for azim angles
   
-  A=30;
-  B=10;
+  polarMax = phiMax;
+  polarMin = phiMin;
+  azimMax = pi/2;
+  azimMin = 0;
   
-  for a = 1:A
-    polar = polarMin + ((polarMax - polarMin) / (2*A)) * (2*a-1);
-    hgf=3;
-    for b = 1:B
-      azim = azimMin + ((azimMax - azimMin) / (2*B)) * (2*b-1);
+  % =========================================Simulation loop=================================================
+  P = 60;
+  A = 60;
+  
+  for p = 1:P
+    for a = 1:A
+      polar = polarMin + ((polarMax - polarMin)/(2*P)) * (2*p-1);
+      azim = azimMin + ((azimMax - azimMin)/(2*A)) * (2*a-1);
       
-      % =======================================Reset Parameters==============================================
       posX = poso(1);
       posY = poso(2);
       posZ = poso(3);
@@ -39,7 +38,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
       
       i = 0;
   
-      while (i < 10)
+      while (i < 100)
         % =================================check if refracted outside========================================
         if i > 0 && rayIsOut == 1
           break;
@@ -54,9 +53,9 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
         if rayIsOut == 0
           [xa ya za f] = checkIfLineIntersectsPrismFaces(posX, posY, posZ, rayX, rayY, rayZ);
           if (rayIsOut == 0 && f(1) != 'N')
-            xi = [xi xa];
-            yi = [yi ya];
-            zi = [zi za];
+            xi = [xi xf];
+            yi = [yi yf];
+            zi = [zi zf];
             face = [face f];
             break;
           endif
@@ -66,22 +65,22 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
         % =========================================Intersection==============================================
         % XY plane projection intersection
         [x y] = circleLineIntersect(cylSectionX, cylSectionY, cylR, posX, posY, rayX, rayY, rayIsOut); 
-        if (x == NaN || y == NaN)
+        if (isnan(x) == 1 || isnan(y) == 1)
           break;
         endif
         % Z value projection intersection 
         distance = sqrt((x - posX)^2 + (y - posY)^2);
         alfa = pi/2 - polar;
-        z = linesIntersectZ(alfa, posX, posZ, distance);
+        z = linesIntersectZ(x, y, posX, posY, posZ, rayX, rayY, rayZ);
         
         % Check if Z is coorect
-        if z > cylMax || z < cylMin
-          if posZ < cylMin
+        if z > cylMax || z < cylMin     
+          if ((rayIsOut == 1 && rayZ > 0) || (rayIsOut == 0 && rayZ < 0))
             % check for lower disk
             [x y] = chackIfDiskAndLineIntersect(cylMin, cylR, posX, posY, posZ, rayX, rayY, rayZ);
             z = cylMin;
             normV = [0, 0, 1];
-          elseif posZ > cylMax
+          elseif ((rayIsOut == 1 && rayZ < 0) || (rayIsOut == 0 && rayZ > 0))
             % check for top disk
             [x y] = chackIfDiskAndLineIntersect(cylMax, cylR, posX, posY, posZ, rayX, rayY, rayZ);
             z = cylMax;
@@ -93,6 +92,16 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
           normV = [cylSectionX-x, cylSectionY-y, 0];
         endif
         
+        if (isnan(x) == 1 || isnan(y) == 1)
+          break;
+        endif
+        
+        % save first intersection of ray with cylinder
+        if i == 0
+          xf = x;
+          yf = y;
+          zf = z;
+        endif;
 
         % intersection angle XYZ
         InV = [rayX, rayY, rayZ];
@@ -105,7 +114,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
         angCrit = asin(n2/n1);
         
         % =======================================refraction or relfection=====================================
-        if n1 > n2 && angIn > (2 * angCrit)/3 % total reflectio or more reflection/refraction with enough intensity reflected to continue simulation
+        if n1 > n2 && angIn > angCrit % total reflectio or more reflection/refraction with enough intensity reflected to continue simulation
           % reflection
           [polar azim posX posY posZ] = doReflect(polar, azim, x, y, z, InV, normV);
         else

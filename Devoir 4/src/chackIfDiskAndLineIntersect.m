@@ -1,5 +1,5 @@
 % finds if a plane intersects a line
-function [x y] = chackIfDiskAndLineIntersect(diskPosZ, r, lineX, lineY, lineZ, lineVX, lineVY, lineVZ)
+function [x y] = chackIfDiskAndLineIntersect(discPosZ, r, lineX, lineY, lineZ, lineVX, lineVY, lineVZ)
   
   cX=4;
   cY=4;
@@ -9,7 +9,7 @@ function [x y] = chackIfDiskAndLineIntersect(diskPosZ, r, lineX, lineY, lineZ, l
   
   % intersec
   x = zEq*lineVX+lineX;
-  y = zEq*lineVY+LineY;
+  y = zEq*lineVY+lineY;
   
   % check if part of disk
   if (x-cX)^2+(y-cY)^2 <= r^2;

@@ -1,6 +1,9 @@
 % https://stackoverflow.com/questions/1549909/intersection-on-circle-of-vector-originating-inside-circle
 function [x y] = circleLineIntersect(circleX, circleY, r, lineX, lineY, lineVX, lineVY, isOutOfCircle)
   
+  x = NaN;
+  y = NaN;
+  
   xDiff = lineX - circleX;
   yDiff = lineY - circleY;
   a = lineVX * lineVX + lineVY * lineVY;
