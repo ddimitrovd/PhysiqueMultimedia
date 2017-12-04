@@ -3,7 +3,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
   xi = [0];
   yi = [0];
   zi = [0];
-  face = ['NO'];
+  face = ['N'];
   
   cylSectionX = 4;
   cylSectionY = 4;
@@ -48,6 +48,7 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
         yi = [yi ya];
         zi = [zi za];
         face = [face f];
+        break;
       endif
     endif
       
