@@ -4,8 +4,7 @@ function [x y] = chackIfDiskAndLineIntersect(diskPosZ, r, lineX, lineY, lineZ, l
   cX=4;
   cY=4;
   
-  % line equation 
-  
+  % line equation  
   zEq= (discPosZ - lineZ)/lineVZ;
   
   % intersec

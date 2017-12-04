@@ -1,5 +1,10 @@
 function [xi yi zi face] = Devoir4(nout, nin, poso)
   
+  xi = [0];
+  yi = [0];
+  zi = [0];
+  face = ['NO'];
+  
   cylSectionX = 4;
   cylSectionY = 4;
   cylR = 2;
@@ -21,8 +26,8 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
   %[theta phi] = maxAngle(poso)
   
   % Ray angular
-  polar = pi/2;
-  azim = 0.5;
+  polar = pi/2 - pi/6;
+  azim = 0.01;
   
   while (i < 100)
     % =================================check if refracted outside=========================================
@@ -34,6 +39,18 @@ function [xi yi zi face] = Devoir4(nout, nin, poso)
     rayX = sin(polar)*cos(azim);
     rayY = sin(polar)*sin(azim);
     rayZ = cos(polar);
+    
+    % ===================================Prism intersection check========================================
+    if rayIsOut == 0
+      [xa ya za f] = checkIfLineIntersectsPrismFaces(posX, posY, posZ, rayX, rayY, rayZ);
+      if (rayIsOut == 0 && f(1) != 'N')
+        xi = [xi xa];
+        yi = [yi ya];
+        zi = [zi za];
+        face = [face f];
+      endif
+    endif
+      
     
     % =========================================Intersection==============================================
     % XY plane projection intersection
